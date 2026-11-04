@@ -2,14 +2,14 @@
 
 Importable GitHub **repository rulesets** that protect the default branch (`main`) so changes only land through pull requests.
 
-There are two templates. They are identical except that the second one also requires CI tests to pass before a PR can be merged.
+Use `protect-main.json` for branch protections and `require-tests.json` to require CI tests to pass. The rulesets apply together, so you can import both.
 
-| Template | File | Requires tests |
+| Template | File | Configures |
 | --- | --- | --- |
-| Protect main | `protect-main.json` | No |
-| Protect main + tests | `protect-main-with-tests.json` | Yes |
+| Protect main | `protect-main.json` | Main-branch protections |
+| Require tests only | `require-tests.json` | Required test status check |
 
-## What both templates enforce
+## What the main-protection templates enforce
 
 - **No direct pushes** to the default branch. Changes must go through a pull request.
 - **Restrict deletions**: the branch can't be deleted.
@@ -21,9 +21,9 @@ There are two templates. They are identical except that the second one also requ
   - Review required from Code Owners
 - **Bypass list**: the *Repository admin* role can bypass the rules **for pull requests only**. This is the "break glass" option for emergencies: you still open a PR, but you can use **Merge without waiting for requirements to be met**. Direct pushes stay blocked.
 
-### Additional rule in `protect-main-with-tests.json`
+### Test requirement
 
-- **Require status checks to pass** before merging, with the check named `test` and **Require branches to be up to date before merging** enabled.
+`require-tests.json` configures only the required test status check and can be combined with `protect-main.json`. It requires the check named `test` to pass and **Require branches to be up to date before merging** to be enabled.
 
 ```json
 {
