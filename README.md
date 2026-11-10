@@ -2,11 +2,12 @@
 
 Importable GitHub **repository rulesets** that protect the default branch (`main`) so changes only land through pull requests.
 
-Use `protect-main.json` for branch protections and `require-tests.json` to require CI tests to pass. The rulesets apply together, so you can import both.
+Use `protect-main.json` for branch protections, `require-reviews.json` to require approvals, and `require-tests.json` to require CI tests to pass. The rulesets apply together, so you can import any combination of them. When multiple rulesets define the same rule or parameter, the most restrictive value wins.
 
 | Template | File | Configures |
 | --- | --- | --- |
-| Protect main | `protect-main.json` | Main-branch protections |
+| Protect main | `protect-main.json` | Main-branch protections (PR requirement, no removals/force pushes, linear history) |
+| Require reviews only | `require-reviews.json` | Required approving review count |
 | Require tests only | `require-tests.json` | Required test status check |
 
 ## What the main-protection templates enforce
@@ -16,10 +17,25 @@ Use `protect-main.json` for branch protections and `require-tests.json` to requi
 - **Block force pushes**: history can't be rewritten.
 - **Require linear history**: no merge commits on `main`. PRs are merged with squash or rebase.
 - **Require a pull request** with:
-  - 1 required approval
   - Dismiss stale approvals when new commits are pushed
   - Review required from Code Owners
+- **Require 1 approval** (this now lives in `require-reviews.json`, see below)
 - **Bypass list**: the *Repository admin* role can bypass the rules **for pull requests only**. This is the "break glass" option for emergencies: you still open a PR, but you can use **Merge without waiting for requirements to be met**. Direct pushes stay blocked.
+
+### Review approval requirement
+
+`require-reviews.json` configures only the required approving review count (1) and can be combined with `protect-main.json` (or used on its own). Because rulesets stack, importing it alongside `protect-main.json` yields the same effective result as the review count living inside `protect-main.json` itself.
+
+```json
+{
+  "type": "pull_request",
+  "parameters": {
+    "required_approving_review_count": 1
+  }
+}
+```
+
+Bypass actors are per-ruleset: the admin bypass in `protect-main.json` only skips that ruleset's rules. `require-reviews.json` includes the same bypass entry so an admin can still merge without waiting for approvals. If that ruleset is imported without it, admins would also have to satisfy the approval requirement (or remove the bypass from `protect-main.json`).
 
 ### Test requirement
 
@@ -71,8 +87,8 @@ Your workflow must run on `pull_request`. If it doesn't, the required check stay
 
 The PR author can't approve their own PR. If you are the only collaborator, the 1-approval requirement can't be satisfied normally, so you merge your own PRs using the admin bypass. Note that **bypass skips every rule in the ruleset**, including the status checks. If you want tests enforced against yourself too:
 
-- remove the entry from `bypass_actors`,
-- set `required_approving_review_count` to `0`,
+- remove the entry from `bypass_actors` in both rulesets,
+- set `required_approving_review_count` to `0` in `require-reviews.json`,
 - set `require_code_owner_review` to `false`.
 
 ### Bypass modes
