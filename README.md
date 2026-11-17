@@ -7,8 +7,8 @@ Ready-to-import rulesets that lock down your `main` branch so all changes go thr
 | What you want | File |
 | --- | --- |
 | Protect `main` (PRs only, no delete, no force push, linear history) | `protect-main.json` |
-| Require 1 approval (plus an extra review for Copilot-authored PRs) | `require-reviews.json` |
-| Require CI tests to pass | `require-tests.json` |
+| Require 1 approval (plus an extra review for Copilot-authored PRs) | `require-review.json` |
+| Require CI tests to pass | `require-test.json` |
 
 You can import any combination. They stack, and when rules overlap, the stricter one wins.
 
@@ -68,7 +68,7 @@ Note: bypass is per-ruleset, and it skips *all* rules in a ruleset that lists th
 
 ## Good to know
 
-- **Solo repositories**: Don't import `require-reviews.json` and skip the `CODEOWNERS` file — zero approvals are required, so you can open a PR and merge normally. If you do keep a `CODEOWNERS` file, you can't approve your own PR; merge those with the admin bypass, or set `require_code_owner_review` to `false` in `protect-main.json`.
+- **Solo repositories**: Don't import `require-review.json` and skip the `CODEOWNERS` file — zero approvals are required, so you can open a PR and merge normally. If you do keep a `CODEOWNERS` file, you can't approve your own PR; merge those with the admin bypass, or set `require_code_owner_review` to `false` in `protect-main.json`.
 - **Updating a PR branch**: Use `git rebase main`, not `git merge main`, to keep history linear.
 - **Old-style branch protection**: Classic branch protection rules stack with rulesets (stricter wins). Remove old rules on `main` to avoid confusion.
 - **Try before enforcing**: Set **Enforcement status: Evaluate** to see what would be blocked without actually blocking it. To confirm a ruleset is active, `git push origin main` should be rejected with a pull-request message.
