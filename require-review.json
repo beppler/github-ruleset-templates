@@ -1,5 +1,5 @@
 {
-  "name": "require-tests",
+  "name": "require-review",
   "target": "branch",
   "enforcement": "active",
   "conditions": {
@@ -10,13 +10,10 @@
   },
   "rules": [
     {
-      "type": "required_status_checks",
+      "type": "pull_request",
       "parameters": {
-        "strict_required_status_checks_policy": true,
-        "do_not_enforce_on_create": false,
-        "required_status_checks": [
-          { "context": "test" }
-        ]
+        "required_approving_review_count": 1,
+        "require_extra_approval_for_unattributed_changes": true
       }
     }
   ],
