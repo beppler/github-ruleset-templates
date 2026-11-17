@@ -23,15 +23,15 @@ You need admin access. Rulesets work on public repos on any plan, and on private
 
 ## Before importing
 
-### Create a CODEOWNERS file
+### Create a CODEOWNERS file (optional)
 
-`protect-main.json` requires review from Code Owners, so you need a `CODEOWNERS` file on the default branch (in `.github/`, the repo root, or `docs/`):
+`protect-main.json` enforces review from Code Owners for files that have an owner. To use that, add a `CODEOWNERS` file on the default branch (in `.github/`, the repo root, or `docs/`):
 
 ```text
 * @your-github-username
 ```
 
-Every owner listed needs **Write** access or higher. Solo repository? You can skip this file — the code-owner requirement only applies to files that have an owner, so with no `CODEOWNERS` file it does nothing and PRs merge without review.
+Every owner listed needs **Write** access or higher. Without a `CODEOWNERS` file the code-owner requirement is a no-op, and PRs merge without review (the other rules still apply). Solo repository? You can skip this file.
 
 ### Match the test name to your CI (tests template only)
 
